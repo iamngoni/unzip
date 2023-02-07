@@ -22,6 +22,12 @@ def unzip():
                 logger.info('Unzipping file: {}'.format(f))
                 zip_ref.extractall('.')
                 zip_ref.close()
+
+            # delete zip file
+            os.remove(file_abspath)
+            logger.info('Deleted zip file: {}'.format(f))
+            logger.info('----------------------------------------')
+
         except Exception as exc:
             logger.error('Error unzipping file: {}'.format(f))
             logger.error(exc)
