@@ -38,19 +38,31 @@ def unzip():
     folders = [f for f in os.listdir('.') if os.path.isdir(f)]
     logger.info('Preparing to move files from {} folders.'.format(len(folders)))
     logger.info('----------------------------------------')
-    for f in folders:
+    for folder in folders:
         try:
-            logger.info('Moving files from folder: {}'.format(f))
-            files = [f for f in os.listdir(f) if os.path.isfile(f)]
-            for file in files:
-                file_abspath = os.path.abspath(file)
+            logger.info('Moving files from folder: {}'.format(folder))
+            # get directory full path
+            folder_abs_path = os.path.abspath(folder)
+            logger.info('Absolute path: {}'.format(folder_abs_path))
+            files = [anime_file for anime_file in os.listdir(folder_abs_path) if os.path.isfile(os.path.join(folder_abs_path, anime_file))]
+            logger.info('Found {} files.'.format(len(files)))
+            for anime_file in files:
+                file_abspath = os.path.join(folder_abs_path, anime_file)
+
+                # check if absolute path exists
+                if os.path.exists(file_abspath):
+                    pass
+                else:
+                    raise Exception('File does not exist. Moving cannot continue.')
+
                 logger.info('Absolute path: {}'.format(file_abspath))
-                os.rename(file_abspath, os.path.join(os.path.abspath('.'), file))
-            logger.info('Deleting folder: {}'.format(f))
-            os.rmdir(f)
+                os.rename(file_abspath, os.path.join(os.path.abspath('.'), anime_file))
+
+            logger.info('Deleting folder: {}'.format(folder))
+            os.rmdir(folder_abs_path)
             logger.info('----------------------------------------')
         except Exception as exc:
-            logger.error('Error moving files from folder: {}'.format(f))
+            logger.error('Error moving file "{}" from folder: {}'.format(anime_file, folder))
             logger.error(exc)
             logger.error('------------------Skipping----------------------')
 
