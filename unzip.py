@@ -8,6 +8,7 @@ import zipfile
 import sys
 from loguru import logger
 import os
+import subprocess
 
 # scan all zipped files in working directory and unzip files into the same directory
 def unzip():
@@ -65,6 +66,17 @@ def unzip():
             logger.error('Error moving file "{}" from folder: {}'.format(anime_file, folder))
             logger.error(exc)
             logger.error('------------------Skipping----------------------')
+
+    logger.info('Unzipping complete.')
+    notify('Unzip', 'Unzipping complete.')
+
+def notify(title, text):
+    CMD = '''
+    on run argv
+        display notification (item 2 of argv) with title (item 1 of argv)
+    end run
+    '''
+    subprocess.call(['osascript', '-e', CMD, title, text])
 
 if __name__ == '__main__':
     unzip()
